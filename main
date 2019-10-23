@@ -1,22 +1,33 @@
-import pandas as pd 
-arquivo = r'C:\Users\JOAO VICTOR\Desktop\pesquisa-FEAdev.csv'
-df = pd.read_csv(arquivo)
-df = df.drop(columns = ['Carimbo de data/hora'])
-cleandate = []
-for i in df['Idade']:
+import pandas as pd
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+
+scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/spreadsheets','https://www.googleapis.com/auth/drive.file', 'https://www.googleapis.com/auth/drive']
+
+creds = ServiceAccountCredentials.from_json_keyfile_name('creds.json', scope)
+
+client = gspread.authorize(creds)
+
+sheet = client.open('Pesquisa FEA.dev (respostas)').sheet1
+data = pd.DataFrame(sheet.get_all_records())
+
+cleanage = []
+
+data['Idade'] = data['Idade'].apply(lambda x: x*10)
+data['Idade'] = data['Idade'].map(str)
+
+for i in data['Idade']:
     i.strip()
     i = int(i[0:2])
-    cleandate.append(i)
+    cleanage.append(i)
 
 sub18 = []
 sub25 = []
 sub35 = []
 acima45 = []
 
-x = pd.Series(cleandate)
-
-for i in cleandate:
-    if i <= 18: 
+for i in cleanage:
+    if i <= 18:
         sub18.append(i)
     if 19 <= i <= 25:
         sub25.append(i)
