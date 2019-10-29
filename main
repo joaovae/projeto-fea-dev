@@ -13,14 +13,13 @@ data = pd.DataFrame(sheet.get_all_records())
 
 cleanage = []
 
-data['Idade'] = data['Idade'].apply(lambda x: x*10)
 data['Idade'] = data['Idade'].map(str)
 
 for i in data['Idade']:
     i.strip()
     i = int(i[0:2])
     cleanage.append(i)
-
+data['Idade'] = cleanage
 sub18 = []
 sub25 = []
 sub35 = []
@@ -35,3 +34,12 @@ for i in cleanage:
         sub35.append(i)
     if 36 <= i <= 45:
         acima45.append(i)
+
+engenharias = []
+economia = []
+atuaria = []
+
+for i in data['Curso']:
+    i = str()
+    i.split()
+    data.loc[data['Curso'] == 'engenharia', 'Curso'] = 'engenharia'
