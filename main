@@ -35,11 +35,15 @@ for i in cleanage:
     if 36 <= i <= 45:
         acima45.append(i)
 
-engenharias = []
-economia = []
-atuaria = []
+cursos = []
 
+data['Curso'] = data.Curso.fillna('nenhum')
 for i in data['Curso']:
-    i = str()
-    i.split()
-    data.loc[data['Curso'] == 'engenharia', 'Curso'] = 'engenharia'
+    t = i.lower()
+    cursos.append(t.split())
+
+for i in cursos:
+    if i[0] == 'engenharia':
+        del(i[1::])
+    elif len(i) == 2:
+        del(i[0])
