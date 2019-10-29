@@ -1,0 +1,37 @@
+import pandas as pd 
+arquivo = r'C:\Users\JOAO VICTOR\Desktop\pesquisa-FEAdev.csv'
+df = pd.read_csv(arquivo)
+df = df.drop(columns = ['Carimbo de data/hora'])
+cleandate = []
+
+for i in df['Idade']:
+    i.strip()
+    i = int(i[0:2])
+    cleandate.append(i)
+    
+df['Idade'] = cleandate
+
+sub18 = []
+sub25 = []
+sub35 = []
+acima45 = []
+
+
+for i in cleandate:
+    if i <= 18: 
+        sub18.append(i)
+    if 19 <= i <= 25:
+        sub25.append(i)
+    if 26 <= i <= 35:
+        sub35.append(i)
+    if 36 <= i <= 45:
+        acima45.append(i)
+        
+engenharias = []        
+economia = []
+atuaria = []
+
+for i in df['Curso']:
+    i = str()
+    i.split()
+    df.loc[df['Curso']=='engenharia','Curso'] = 'engenharia'
