@@ -47,3 +47,25 @@ for i in cursos:
         del(i[1::])
     elif len(i) == 2:
         del(i[0])
+        
+def cleaning(a, b, c):
+    for i in a:
+        if i[0] == b:
+            i[0] = c
+
+
+cleaning(cursos, 'econômicas', 'economia')
+cleaning(cursos, 'adm', 'administração')
+cleaning(cursos, 'atuaria', 'atuária')
+cleaning(cursos, 'atuariais', 'atuária')
+cleaning(cursos, 'farmacia', 'farmácia')
+cleaning(cursos, 'pedagoga', 'pedagogia')
+cleaning(cursos, 'contábeis', 'contabilidade')
+
+for i in cursos:
+    if i[0] == 'arquitetura':
+        del (i[1::])
+
+for i in cursos:
+    if i[0] == 'publicidade':
+        del (i[1::])
