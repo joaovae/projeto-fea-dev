@@ -62,10 +62,21 @@ cleaning(cursos, 'farmacia', 'farmácia')
 cleaning(cursos, 'pedagoga', 'pedagogia')
 cleaning(cursos, 'contábeis', 'contabilidade')
 
-for i in cursos:
-    if i[0] == 'arquitetura':
-        del (i[1::])
+cleaning2(cursos, 'arquitetura')
+cleaning2(cursos, 'publicidade')
 
-for i in cursos:
-    if i[0] == 'publicidade':
-        del (i[1::])
+cursos = pd.Series(cursos)
+
+df['Curso'] = cursos
+
+df.columns = ['idade', 'genero', 'estudante', 'escolaridade', 'curso','instituicao', 'profissao', 'nível', 'investiu','renda', 'pretende', 'poupança', 'conhece', 'tipo']
+
+def relacao(a, b, c=None):
+    c = pd.DataFrame(df[a])
+    c[b] = df[b]
+    return c
+
+
+df_vji_g = relacao('investiu', 'genero')
+df_vji_gr = relacao('investiu', 'escolaridade')
+df_vpp_vji = relacao('poupanca', 'investiu')
