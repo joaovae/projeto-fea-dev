@@ -61,12 +61,31 @@ df['Curso'] = cursos
 
 df.columns = ['idade', 'genero', 'estudante', 'escolaridade', 'curso','instituicao', 'profissao', 'nível', 'investiu','renda', 'pretende', 'poupança', 'conhece', 'tipo']
 
-def relacao(a, b, c=None):
+"""
+def relacao(a, b):
     c = pd.DataFrame(df[a])
     c[b] = df[b]
     return c
 
 
 df_vji_g = relacao('investiu', 'genero')
-df_vji_gr = relacao('investiu', 'escolaridade')
-df_vpp_vji = relacao('poupanca', 'investiu')  
+df_vji_esc = relacao('investiu', 'escolaridade')
+df_vpp_vji = relacao('poupanca', 'investiu')
+df_vpp_esc = relacao('poupanca','escolaridade')
+df_lvl_tip = relacao('nível','tipo')
+df_nce_esc = relacao('conhece','escolaridade')
+df_tip_vji = relacao ('tipo','investiu')
+df_tip_esc = relacao('tipo','escolaridade')
+
+"""
+
+df.loc[df['genero']=='Feminino','genero'] = 0
+df.loc[df['genero']=='Masculino','genero'] = 1
+
+df.loc[df['investiu']=='NÃO','investiu'] = 0 
+df.loc[df['investiu']=='SIM','investiu'] = 1 
+
+a = df['genero']
+b = df['investiu']
+plt.scatter(a,b)
+plt.show()
