@@ -1,32 +1,27 @@
-import pandas as pd
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
+import pandas as pd 
+import matplotlib.pyplot as plt
 
-scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/spreadsheets','https://www.googleapis.com/auth/drive.file', 'https://www.googleapis.com/auth/drive']
+arquivo = r'C:\Users\JOAO VICTOR\Desktop\pesquisa-FEAdev.csv'
+df = pd.read_csv(arquivo)
+df = df.drop(columns = ['Carimbo de data/hora'])
+df = df.drop([41], axis=0)
+cleandate = []
 
-creds = ServiceAccountCredentials.from_json_keyfile_name('creds.json', scope)
-
-client = gspread.authorize(creds)
-
-sheet = client.open('Pesquisa FEA.dev (respostas)').sheet1
-data = pd.DataFrame(sheet.get_all_records())
-
-cleanage = []
-
-data['Idade'] = data['Idade'].map(str)
-
-for i in data['Idade']:
+for i in df['Idade']:
     i.strip()
     i = int(i[0:2])
-    cleanage.append(i)
-data['Idade'] = cleanage
+    cleandate.append(i)
+    
+df['Idade'] = cleandate
+
 sub18 = []
 sub25 = []
 sub35 = []
 acima45 = []
 
-for i in cleanage:
-    if i <= 18:
+
+for i in cleandate:
+    if i <= 18: 
         sub18.append(i)
     if 19 <= i <= 25:
         sub25.append(i)
@@ -34,11 +29,11 @@ for i in cleanage:
         sub35.append(i)
     if 36 <= i <= 45:
         acima45.append(i)
-
+        
 cursos = []
 
-data['Curso'] = data.Curso.fillna('nenhum')
-for i in data['Curso']:
+df['Curso'] = df.Curso.fillna('nenhum')
+for i in df['Curso']:
     t = i.lower()
     cursos.append(t.split())
 
@@ -48,19 +43,24 @@ for i in cursos:
     elif len(i) == 2:
         del(i[0])
         
-def cleaning(a, b, c):
+def cleaning (a, b, c):        
     for i in a:
         if i[0] == b:
             i[0] = c
-
-
+        
+        
+def cleaning2 (a, b):
+    for i in a:
+        if i[0] == b:
+            del(i[1::])
+        
 cleaning(cursos, 'econômicas', 'economia')
-cleaning(cursos, 'adm', 'administração')
-cleaning(cursos, 'atuaria', 'atuária')
-cleaning(cursos, 'atuariais', 'atuária')
+cleaning(cursos, 'adm', 'administração') 
+cleaning(cursos, 'atuaria', 'atuária') 
+cleaning(cursos, 'atuariais', 'atuária') 
 cleaning(cursos, 'farmacia', 'farmácia')
 cleaning(cursos, 'pedagoga', 'pedagogia')
-cleaning(cursos, 'contábeis', 'contabilidade')
+cleaning(cursos, 'contábeis', 'contabilidade') 
 
 cleaning2(cursos, 'arquitetura')
 cleaning2(cursos, 'publicidade')
@@ -69,14 +69,62 @@ cursos = pd.Series(cursos)
 
 df['Curso'] = cursos
 
-df.columns = ['idade', 'genero', 'estudante', 'escolaridade', 'curso','instituicao', 'profissao', 'nível', 'investiu','renda', 'pretende', 'poupança', 'conhece', 'tipo']
+df.columns = ['idade', 'genero', 'estudante', 'escolaridade', 'curso','instituicao', 'profissao', 'nível', 'investiu','renda', 'pretende', 'poupanca', 'conhece', 'tipo']
 
-def relacao(a, b, c=None):
+def relacao(a, b):
     c = pd.DataFrame(df[a])
     c[b] = df[b]
     return c
 
+df.loc[df['genero']=='Feminino','genero'] = 0
+df.loc[df['genero']=='Masculino','genero'] = 1
+df.loc[df['genero']=='Outros','genero'] = 2
+
+
+df.loc[df['investiu']=='NÃO','investiu'] = 0 
+df.loc[df['investiu']=='SIM','investiu'] = 1 
 
 df_vji_g = relacao('investiu', 'genero')
-df_vji_gr = relacao('investiu', 'escolaridade')
+df_vji_esc = relacao('investiu', 'escolaridade')
 df_vpp_vji = relacao('poupanca', 'investiu')
+df_vpp_esc = relacao('poupanca','escolaridade')
+df_lvl_tip = relacao('nível','tipo')
+df_nce_esc = relacao('conhece','escolaridade')
+df_tip_vji = relacao ('tipo','investiu')
+df_tip_esc = relacao('tipo','escolaridade')
+
+"""
+
+df.loc[df['genero']=='Feminino','genero'] = 0
+df.loc[df['genero']=='Masculino','genero'] = 1
+
+df.loc[df['investiu']=='NÃO','investiu'] = 0 
+df.loc[df['investiu']=='SIM','investiu'] = 1 
+
+a = df['genero']
+b = df['investiu']
+plt.pie(a,b)
+plt.show()
+
+a = df['genero']
+b = df['investiu']
+
+plt.pie(a, b)
+plt.show()
+
+
+xx = 0
+xy = 0      
+vji = 0
+for i in df:
+    if df['investiu'] == 1 and df['genero'] == 1:
+        xy = xy+1
+"""
+df_vji_g.plot()
+a = df['investiu'] == 1        
+        
+#df_vji_g['investiu'].value_counts()
+vji = 0
+dict1 = {'investiu':'' , 'genero':''}
+for i in df_vji_g['investiu']:
+    if i == 1:
