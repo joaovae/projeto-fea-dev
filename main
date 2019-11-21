@@ -1,12 +1,14 @@
 import pandas as pd 
 import matplotlib.pyplot as plt
 
+#criando o dataframe
 arquivo = r'C:\Users\JOAO VICTOR\Desktop\pesquisa-FEAdev.csv'
 df = pd.read_csv(arquivo)
 df = df.drop(columns = ['Carimbo de data/hora'])
 df = df.drop([41], axis=0)
 cleandate = []
 
+#limpando e dividindo as faixas etárias
 for i in df['Idade']:
     i.strip()
     i = int(i[0:2])
@@ -29,7 +31,8 @@ for i in cleandate:
         sub35.append(i)
     if 36 <= i <= 45:
         acima45.append(i)
-        
+
+#limpando os cursos
 cursos = []
 
 df['Curso'] = df.Curso.fillna('nenhum')
@@ -71,6 +74,7 @@ df['Curso'] = cursos
 
 df.columns = ['idade', 'genero', 'estudante', 'escolaridade', 'curso','instituicao', 'profissao', 'nível', 'investiu','renda', 'pretende', 'poupanca', 'conhece', 'tipo']
 
+#tentativa de moldar os dados para fazer as relações e análises (a partir daqui é bagunça)
 def relacao(a, b):
     c = pd.DataFrame(df[a])
     c[b] = df[b]
